@@ -28,12 +28,39 @@ public record IconTooltipComponent(List<ItemStack> icons) implements TooltipComp
         int scaledX = (int) (x / scale);
         int scaledY = (int) (y / scale);
         int scaledOffset =  (int) (8 / scale);
+
         MatrixStack matrices = RenderSystem.getModelViewStack();
         matrices.push();
         matrices.scale(0.5f, 0.5f, 1.0f);
-        for(int i = 0; i < icons.size(); i++){
-            itemRenderer.renderInGuiWithOverrides(icons.get(i), scaledX + scaledOffset * i, scaledY, -1);
-        }
+
+        // works outside of REI
+        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+
+//        // when offset, you can see the icons are actually rendered at the correct place but they hide behind the tooltip itself
+//        renderIcons(itemRenderer, scaledX, scaledY + 16, scaledOffset);
+
+//        // changing the zOffset doesn't work
+//        itemRenderer.zOffset = -200f;
+//        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+//        itemRenderer.zOffset = -100f;
+//        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+//        itemRenderer.zOffset = 0f;
+//        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+//        itemRenderer.zOffset = 100f;
+//        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+//        itemRenderer.zOffset = 200f;
+//        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+
+//        // changing the z value directly doesn't work either...
+//        matrices.translate(0, 0, 200); // or -200?
+//        renderIcons(itemRenderer, scaledX, scaledY, scaledOffset);
+
         matrices.pop();
+    }
+
+    public void renderIcons(ItemRenderer itemRenderer, int x, int y, int offset) {
+        for (int i = 0; i < icons.size(); i++) {
+            itemRenderer.renderInGuiWithOverrides(icons.get(i), x + offset * i, y, 0);
+        }
     }
 }

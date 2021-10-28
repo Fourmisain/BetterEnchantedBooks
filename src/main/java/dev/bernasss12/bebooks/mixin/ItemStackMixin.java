@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
@@ -48,18 +47,16 @@ public abstract class ItemStackMixin {
     @Inject(at = @At(value = "TAIL"), method = "method_17869", remap = false)
     private static void addTooltipSpacers(List<Text> tooltip, NbtCompound tag, Enchantment enchantment, CallbackInfo info) {
         if (MinecraftClient.getInstance().currentScreen instanceof HandledScreen) {
-            if (BetterEnchantedBooks.enchantedItemStack.get().getItem().equals(Items.ENCHANTED_BOOK)) {
-                switch (ModConfig.tooltipSetting) {
-                    case ENABLED:
+            switch (ModConfig.tooltipSetting) {
+                case ENABLED:
+                    tooltip.add(new IconTooltipDataText(BetterEnchantedBooks.getApplicableItems(enchantment)));
+                    break;
+                case ON_SHIFT:
+                    if (Screen.hasShiftDown())
                         tooltip.add(new IconTooltipDataText(BetterEnchantedBooks.getApplicableItems(enchantment)));
-                        break;
-                    case ON_SHIFT:
-                        if (Screen.hasShiftDown())
-                            tooltip.add(new IconTooltipDataText(BetterEnchantedBooks.getApplicableItems(enchantment)));
-                        break;
-                    case DISABLED:
-                        break;
-                }
+                    break;
+                case DISABLED:
+                    break;
             }
         }
     }

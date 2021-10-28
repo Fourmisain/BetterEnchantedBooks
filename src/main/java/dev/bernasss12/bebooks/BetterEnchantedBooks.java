@@ -29,7 +29,6 @@ public class BetterEnchantedBooks implements ClientModInitializer {
 
     private static Map<ItemStack, Integer> cachedColors;
 
-    public static final ThreadLocal<ItemStack> enchantedItemStack = ThreadLocal.withInitial(() -> ItemStack.EMPTY);
     public static final ThreadLocal<Boolean> shouldShowEnchantmentMaxLevel = ThreadLocal.withInitial(() -> false);
 
     public static Map<Enchantment, List<ItemStack>> cachedApplicableEnchantments;
