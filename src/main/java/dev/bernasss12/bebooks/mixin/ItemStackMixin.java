@@ -31,6 +31,7 @@ public abstract class ItemStackMixin {
     @ModifyVariable(method = "appendEnchantments", argsOnly = true, at = @At("HEAD"))
     private static NbtList appendEnchantmentsHead(NbtList tag, List<Text> tooltip, NbtList enchantments) {
         if (MinecraftClient.getInstance().currentScreen instanceof HandledScreen) {
+            BetterEnchantedBooks.LOGGER.info("before crash: ModConfig.sortingSetting = {}", ModConfig.sortingSetting);
             return NBTUtils.toListTag(NBTUtils.sorted(enchantments, ModConfig.sortingSetting, ModConfig.doKeepCursesBelow));
         }
         return tag;

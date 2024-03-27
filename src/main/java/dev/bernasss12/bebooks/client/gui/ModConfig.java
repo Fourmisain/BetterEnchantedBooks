@@ -67,6 +67,8 @@ public class ModConfig {
         tooltipSetting = DEFAULT_TOOLTIP_SETTING;
         // Enchantment Glint
         glintSetting = DEFAULT_GLINT_SETTING;
+
+        BetterEnchantedBooks.LOGGER.info("loadConfigDefaults(), sortingSetting = {}", sortingSetting);
     }
 
     private static void loadEnchantmentData() {
@@ -115,12 +117,16 @@ public class ModConfig {
     }
 
     public static void loadAndPopulateConfig() {
+        BetterEnchantedBooks.LOGGER.info("loadAndPopulateConfig()");
+
         Path path = CONFIG_DIR.resolve("config.properties");
 
         loadConfigDefaults();
 
         // Try to read and parse config file
         if (Files.exists(path)) {
+            BetterEnchantedBooks.LOGGER.info("found config {}", path);
+
             try (BufferedReader reader = Files.newBufferedReader(path)) {
                 Properties properties = new Properties();
                 properties.load(reader);
@@ -130,6 +136,8 @@ public class ModConfig {
                 if (properties.containsKey("version")) {
                     version = Integer.parseInt(properties.getProperty("version"));
                 }
+
+                BetterEnchantedBooks.LOGGER.info("read config version {}", version);
 
                 // Sorting Settings
                 if (version == 0) {
@@ -143,8 +151,12 @@ public class ModConfig {
                         sortingSetting = SortingSetting.DISABLED;
                     }
                 } else {
+                    BetterEnchantedBooks.LOGGER.info("read sorting setting {}", properties.getProperty("sorting_mode"));
                     sortingSetting = SortingSetting.fromString(properties.getProperty("sorting_mode"));
                 }
+
+                BetterEnchantedBooks.LOGGER.info("got sorting setting {}", sortingSetting);
+
                 doKeepCursesBelow = Boolean.parseBoolean(properties.getProperty("keep_curses_below"));
 
                 // Coloring Settings
@@ -227,7 +239,10 @@ public class ModConfig {
         // Sorting settings page
         builder.setDefaultBackgroundTexture(new Identifier("minecraft:textures/block/spruce_planks.png"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
-        sortingCategory.addEntry(entryBuilder.startEnumSelector(Text.translatable("entry.bebooks.sorting_settings.sorting_mode"), SortingSetting.class, sortingSetting).setDefaultValue(DEFAULT_SORTING_SETTING).setSaveConsumer(setting -> sortingSetting = setting).build());
+        sortingCategory.addEntry(entryBuilder.startEnumSelector(Text.translatable("entry.bebooks.sorting_settings.sorting_mode"), SortingSetting.class, sortingSetting).setDefaultValue(DEFAULT_SORTING_SETTING).setSaveConsumer(setting -> {
+            sortingSetting = setting;
+            BetterEnchantedBooks.LOGGER.info("set sorting setting {}", sortingSetting);
+        }).build());
         sortingCategory.addEntry(entryBuilder.startBooleanToggle(Text.translatable("entry.bebooks.sorting_settings.keep_curses_at_bottom"), doKeepCursesBelow).setSaveConsumer((doKeepCursesBelowInput) -> doKeepCursesBelow = doKeepCursesBelowInput).build());
 
         // Coloring settings page

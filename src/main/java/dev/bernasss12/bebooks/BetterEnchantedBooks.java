@@ -47,6 +47,8 @@ public class BetterEnchantedBooks implements ClientModInitializer {
      * enchantment registry should be done.
      */
     public static void onTitleScreenLoaded(){
+        BetterEnchantedBooks.LOGGER.info("onTitleScreenLoaded(), ModConfig.configsFirstLoaded = {}", ModConfig.configsFirstLoaded);
+
         if (!ModConfig.configsFirstLoaded) {
             //TooltipDrawerHelper.populateEnchantmentIconList();
             ModConfig.loadAndPopulateConfig();
